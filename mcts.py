@@ -1,7 +1,6 @@
 """
-This module is written by Paul Sinclair:
+This module was built upon the following by Paul Sinclair (distributed under the MIT Licence):
 https://github.com/pbsinclair42/MCTS
-Distributed under the MIT Licence.
 """
 from __future__ import division
 import time

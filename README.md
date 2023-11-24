@@ -1,4 +1,4 @@
-# Black-Box Testing w.r.t. Automata Requirements
+# Black-Box Testing w.r.t. Automata Requirements using Reinforcement Learning
 This tool tests black-box reactive systems with Boolean input/output variables w.r.t. requirements given in Verilog.
 These systems under test (SUT) receive a valuation, and answers immediately by an output valuation, and repeat this infinitely. There are examples in the `examples` directry.
 
