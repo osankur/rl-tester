@@ -1,0 +1,92 @@
+TYPEDEF  InT ::=
+      InputVal  { iup, iright :: Bool} 
+ENDDEF
+
+TYPEDEF OutT ::=
+      OutputVal {open, doorstep, fault, zone :: Int }
+ENDDEF
+
+PROCDEF  passageway_tp  [ Act :: InT;  Obs :: OutT] (io :: Bool ; prev_input :: InT ; mode :: Int ; f :: Bool ; z :: Int ; err :: Bool) HIT ::=
+       Act ?act [[ io ]] >-> passageway_tp [Act, Obs] (not(io), act, mode, f, z, err)
+       ##
+       Obs ?o [[ not(io) ]] >-> 
+       LET next_z = zone(o) IN -- IF (z == (zone(o) + 1)) \/ (z == (zone(o) -  1)) /\ (mode == 2) THEN zone(o) ELSE z FI; IN
+       LET next_err =                 err \/
+                (
+                  ( (mode == 0) /\ (iup(prev_input) /\ (open(o) == 1) ))
+                  \/
+                  ((mode == 1) /\ ( not(iright(prev_input)) /\ (doorstep(o) == 1) /\ ( next_z == z )))
+                  \/
+                  ((mode == 2) /\ (z <= 8) /\ (iright(prev_input)) /\ not (next_z == (z+1)))
+                   \/
+                   ((mode == 2) /\ (z <= 8) /\ (not(iright(prev_input))) /\ (next_z == (z+1)))
+                );
+        IN
+        (
+            [[ next_err ]] =>> HIT
+            ##
+            [[ next_err == False ]] =>>
+            passageway_tp [Act, Obs] 
+            (not(io), prev_input, 
+                    IF ( open(o) == 1) THEN (IF (doorstep(o) == 0) THEN 1 ELSE 2 FI) ELSE 0 FI, 
+                    f \/ (fault(o) ==1), 
+                    next_z,
+                    next_err
+                    )
+        )
+        NI
+        NI
+ENDDEF
+
+
+CHANDEF  Chans  ::=    Action :: InT
+                     ; Result :: OutT
+ENDDEF
+
+PROCDEF  passageway_process  [ Act :: InT;  Obs :: OutT] ()
+    ::= 
+        Act ?a >-> Obs ?o >-> passageway_process [Act, Obs] ()
+ENDDEF
+
+-- ----------------------------------------------------------------------------------------- --
+
+MODELDEF  Passageway ::=
+    CHAN IN    Action
+    CHAN OUT   Result
+    -- BEHAVIOUR  passageway_req [ Action , Result] (True, InputVal(False, False), 0, False, 0, False)
+    BEHAVIOUR  passageway_process [ Action , Result] ()
+ENDDEF
+
+--PROCDEF  g  [ M :: Bool ] ( )  HIT
+--    ::=
+--        M ?b [[ b == False ]]
+--           >->  g [ M ] ()
+--        ##
+--        M ?b [[ b == True ]]
+--           >-> HIT
+--ENDDEF
+--
+PURPDEF  TP ::=
+        CHAN IN Action
+        CHAN OUT Result
+        GOAL g  ::=  passageway_tp [ Action , Result] (True, InputVal(False, False), 0, False, 0, False)
+ENDDEF
+
+-- ----------------------------------------------------------------------------------------- --
+
+CNECTDEF  Sut ::=
+        CLIENTSOCK
+
+        CHAN  OUT  Action                        HOST "localhost"  PORT 7890
+        ENCODE     Action ? opn              ->  ! toString(opn)
+
+        -- CHAN  OUT   Monoo                        HOST "localhost"  PORT 7890
+        -- ENCODE     Monoo ! opn               ->  ! toString(opn)
+
+        CHAN  IN   Result                        HOST "localhost"  PORT 7890
+        DECODE     Result ! fromString(s)   <-   ? s
+
+
+ENDDEF
+
+-- ----------------------------------------------------------------------------------------- --
