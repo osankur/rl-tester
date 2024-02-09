@@ -46,6 +46,8 @@ The executables must be on path.
 
 - Executables of [yosys](https://github.com/YosysHQ/yosys) and [berkeley-abc](https://github.com/berkeley-abc/abc) which can be installed by cloning these repositories or using a package manager.
 
+Once these are installed, run `make` in this directory. This will compile some scripts in the `scripts` directory.
+
 ## Automatic Installation / Artifact
 The script `artifact/install-packages.sh` installs all requirements and sets environment variables for an Ubuntu system (tested on 20.04 and 22.04).
 For other distributions, you just need to change the `apt` command. The program just needs executables of yosys and berkeley-abc.
