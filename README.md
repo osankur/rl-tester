@@ -116,3 +116,6 @@ To check `maze_faulty.py`, run
 
 Both ends with a violation of one of the two monitors. Note that the second one can also end with the violation of
 'maze_req_error' since in all cases the tester monitors for all errors and stops at the first one.
+
+# License
+This is distributed under the 3-Clause BSD License (see [LICENSE](LICENSE)).
