@@ -20,20 +20,37 @@ and defines the objective of reaching a position with x=2. `maze_req2.v` raises 
 Testing is done in two phases: 1) Offline computation of test strategies 2) Online testing, which  are detailed below.
 
 # Installation
-## Dependencies
-We use the following libraries and external programs:
+## Manual installation
+This program is written in Python 3. We use the following libraries and external programs.
+
+The following two Python packages are needed
 - [py-aiger](https://github.com/mvcisback/py-aiger)
 - [`dd`](https://pypi.org/project/dd/)
-- A custom [version](https://github.com/osankur/AbsSynthe/) of the [Abssynthe](https://github.com/gaperez64/AbsSynthe/) game solver
-- A custom [version](https://github.com/osankur/aiger) of the [Aiger library](https://github.com/arminbiere/aiger). The `scripts` directory also contains a modified copy of one of the aiger modules.
-- Executables of [yosys](https://github.com/YosysHQ/yosys) and [berkeley-abc](https://github.com/berkeley-abc/abc)
 
-## Installation on your machine
-The script `artifact/install-packages.sh` installs all requirements for an Ubuntu system (tested on 20.04 and 22.04).
+and can be installed by
+
+        pip3 install -r requirements.txt
+
+- A custom [version](https://github.com/osankur/abssynthe/tree/reach_synth) of the [Abssynthe](https://github.com/gaperez64/AbsSynthe/) game solver.
+You can clone with:
+
+        git clone -b reach_synt git@github.com:osankur/abssynthe.git
+
+and follow compilation instructions. The binary executable `abssynthe` must be on path.
+
+- A custom [version](https://github.com/osankur/aiger) of the [Aiger library](https://github.com/arminbiere/aiger). The `scripts` directory also contains a modified copy of one of the aiger modules.
+
+        git clone git@github.com:osankur/aiger.git
+
+The executables must be on path.
+
+- Executables of [yosys](https://github.com/YosysHQ/yosys) and [berkeley-abc](https://github.com/berkeley-abc/abc) which can be installed by cloning these repositories or using a package manager.
+
+## Automatic Installation / Artifact
+The script `artifact/install-packages.sh` installs all requirements and sets environment variables for an Ubuntu system (tested on 20.04 and 22.04).
 For other distributions, you just need to change the `apt` command. The program just needs executables of yosys and berkeley-abc.
 
-## Installation using a Ubuntu VM
-Download the following image from TACAS23 to run this program in a virtual machine with Oracle VirtualBox:
+If you don't have a matching system or if the above script fails, you can use a Ubuntu VM. Download the following image from TACAS23 to run this program in a virtual machine with Oracle VirtualBox:
 
 https://zenodo.org/record/7113223#.Y4oKBDPMLMM
 
