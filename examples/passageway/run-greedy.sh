@@ -2,7 +2,7 @@ set -x
 MEMLIM=8G
 TIMELIM=1800
 ulimit -t ${TIMELIM}
-N=50
+N=100
 MAXSTEPS=250
 FILE=logs/greedy_ms${MAXSTEPS}_$1
 rm -f $FILE

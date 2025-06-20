@@ -10,7 +10,7 @@ PROCDEF  ring_tp  [ Act :: InT;  Obs :: OutT] (io :: Bool ; prev_input :: InT ; 
        Act ?act [[ io ]] >-> ring_tp [Act, Obs] (not(io), act, prg)
        ##
        Obs ?o [[ not(io) ]] >->
-        LET finished = prg == 8 IN
+        LET finished = prg == 4 IN
         (
             [[ finished ]] =>> HIT
             ##

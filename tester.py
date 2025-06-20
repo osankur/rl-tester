@@ -134,6 +134,7 @@ class RandomTester:
 
         # Number of steps done in the current round
         self.step = None
+        self.total_steps = 0
 
         for v in self.strat.inputs:
             self.man.declare(v)
@@ -357,6 +358,7 @@ class RandomTester:
             Read the output, and update the AIG and BDD states
         """
         self.step = self.step + 1
+        self.total_steps += 1
         inp = {k:v for (k,v) in self.bdd2minterm(input_bdd).items() if k in self.strat.inputs and not "controllable_" in k}
         output, state = self.impl.next(inp)
         output = {f"controllable_{k}":v for (k,v) in output.items()}
@@ -513,15 +515,18 @@ class RandomTester:
                     raise e
             print("")
             print(f"\n{ANSI.YELLOW}Could not find covering trace{ANSI.RESET}")
+            print(f"Made {self.total_steps} steps")
         except ObjectiveReached as e:
             logging.info("Displaying covering trace")
             # self.print_bdd_history(e.history)
             self.impl.print_history()
             print(f"\n{ANSI.GREEN}{ANSI.NEGATIVE}{ANSI.BOLD}Objective reached: {e.label}{ANSI.RESET}")
+            print(f"Objective found after {self.total_steps} steps")
         except RequirementViolation as e:
             logging.info(f"Displaying error trace")
             self.impl.print_history()
             print(f"\n{ANSI.RED}{ANSI.NEGATIVE}{ANSI.BOLD}Requirement violation: State satisfies '{e.label}' {ANSI.RESET}")
+            print(f"Error found after {self.total_steps} steps")
             # self.print_bdd_history(e.history)
 
         logging.info(f'{ANSI.BOLD}Test ended after {self.getNbRuns()} runs of {max_steps} steps{ANSI.RESET}')
@@ -584,20 +589,22 @@ class MCTSTester(RandomTester):
             if self.verbose >= 1:
                 tester.printOptimalPolicy(self)
                 print("")
-            print(f"\n{ANSI.YELLOW}Could not find covering trace{ANSI.RESET}")
+            print(f"\n{ANSI.YELLOW}Could not find covering trace after{ANSI.RESET}")
+            print(f"Made {self.total_steps} steps")
         except mcts.RequirementViolation as e:
             logging.info(f"Displaying error trace")
             self.impl.print_history()
             print(f"\n{ANSI.RED}{ANSI.NEGATIVE}{ANSI.BOLD}Requirement violation: State satisfies '{e.label}' {ANSI.RESET}")
+            print(f"Error found after {self.total_steps} steps")
         except mcts.ObjectiveReached as e:
             logging.info(f"Displaying covering trace")
             self.impl.print_history()
             print(f"\n{ANSI.GREEN}{ANSI.NEGATIVE}{ANSI.BOLD}Objective reached: {e.label}{ANSI.RESET}")
+            print(f"Objective reached after {self.total_steps} steps")
         if self.graphviz:
             tester.displayDot(self.Xu - set(["clk"]))
         print("")
         logging.info(f'{ANSI.BOLD}Test ended after {tester.getNbRuns()} runs{ANSI.RESET}')
-        logging.info(f'Total time: {int(time.time() - start_time)}s')
         logging.info(f'Steps per second: {int(tester.total_steps / ((time.time() - start_time)))}')
         logging.info(f'Minimum cost encountered: {tester.min_cost}')
     
