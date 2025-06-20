@@ -1,0 +1,4 @@
+systart p java TxsAdapter 7890
+tester Ring TP Sut
+test 1000 $> /tmp/o
+systop p

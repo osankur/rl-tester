@@ -1,0 +1,61 @@
+TYPEDEF  InT ::=
+      InputVal  { loss, reset  :: Bool} 
+ENDDEF
+
+TYPEDEF OutT ::=
+      OutputVal {stable :: Bool }
+ENDDEF
+
+PROCDEF  ring_tp  [ Act :: InT;  Obs :: OutT] (io :: Bool ; prev_input :: InT ; prg :: Int) HIT ::=
+       Act ?act [[ io ]] >-> ring_tp [Act, Obs] (not(io), act, prg)
+       ##
+       Obs ?o [[ not(io) ]] >->
+        LET finished = prg == 8 IN
+        (
+            [[ finished ]] =>> HIT
+            ##
+            [[ finished == False ]] =>>
+            ring_tp [Act, Obs] (not(io), prev_input, IF reset(prev_input) THEN 0 ELSE (IF loss(prev_input) THEN prg ELSE (IF prg < 32 THEN prg+1 ELSE prg FI) FI) FI)
+        )
+        NI
+ENDDEF
+
+
+CHANDEF  Chans  ::=    Action :: InT
+                     ; Result :: OutT
+ENDDEF
+
+PROCDEF  passageway_process  [ Act :: InT;  Obs :: OutT] ()
+    ::= 
+        Act ?a >-> Obs ?o >-> passageway_process [Act, Obs] ()
+ENDDEF
+
+-- ----------------------------------------------------------------------------------------- --
+
+MODELDEF  Ring ::=
+    CHAN IN    Action
+    CHAN OUT   Result
+    BEHAVIOUR  passageway_process [ Action , Result] ()
+ENDDEF
+
+PURPDEF  TP ::=
+        CHAN IN Action
+        CHAN OUT Result
+        GOAL g  ::=  ring_tp [ Action , Result] (True, InputVal(False, False), 0)
+ENDDEF
+
+-- ----------------------------------------------------------------------------------------- --
+
+CNECTDEF  Sut ::=
+        CLIENTSOCK
+
+        CHAN  OUT  Action                        HOST "localhost"  PORT 7890
+        ENCODE     Action ? opn              ->  ! toString(opn)
+
+        CHAN  IN   Result                        HOST "localhost"  PORT 7890
+        DECODE     Result ! fromString(s)   <-   ? s
+
+
+ENDDEF
+
+-- ----------------------------------------------------------------------------------------- --

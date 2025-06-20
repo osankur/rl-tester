@@ -1,0 +1,7 @@
+*.pyc
+*.class
+strip_outputs
+__pycache__
+artifact/abssynthe
+artifact/aiger
+*.aag

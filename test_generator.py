@@ -57,6 +57,7 @@ def synthesize(reqs, output_dir):
     # Copy every req file to tmp and convert to aag
     for req in reqs:
         tmpfile = tmp_folder + base_names[req]
+        print(f"tmp file: {tmpfile}")
         shutil.copyfile(req, tmpfile)
         comp_proc = subprocess.run([make_aag_script, tmpfile],capture_output=True)
         if (comp_proc.returncode != 0):
@@ -66,7 +67,20 @@ def synthesize(reqs, output_dir):
 
     # Relabel latches by adding the base filename as a prefix
     aag_files=dict()
-    aag_files = dict( [(req,aiger.load(tmp_folder + base_names[req] + ".aag")) for req in reqs])
+    for req in reqs:
+        aag_filename = tmp_folder + base_names[req] + ".aag"
+        try:
+            aag_files[req] = aiger.load(aag_filename)
+        except ValueError as e:
+            if "Failed to parse aag/aig HEADER" in str(e):
+                comp_proc = subprocess.run(["aigmove", aag_filename, aag_filename],capture_output=True)
+                if (comp_proc.returncode != 0):
+                    logging.fatal(f"Failed to apply aigmove to aag {aag_filename}")
+                    print(comp_proc.stderr)
+                    sys.exit(-1)
+                aag_files[req] = aiger.load(aag_filename)
+            else:
+                raise e
     renamed_aag = dict()
     for (req,aag) in aag_files.items():
         subst = dict([(l, base_names[req] + "_" + l) for l in list(aag.latches)])

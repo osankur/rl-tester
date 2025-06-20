@@ -17,7 +17,7 @@ Furthermore, it has an output `objective` which is 1 iff the sequence read so fa
 which is 1 iff the sequence is a violation of the requirement. Here, `maze_req.v` raises an error when the robot enters position (2,2) (which means collision with an obstacle), 
 and defines the objective of reaching a position with x=2. `maze_req2.v` raises an error at position (4,4) and has the objective of reaching (4,4).
 
-Testing is done in two phases: 1) Offline computation of test strategies 2) Online testing, which  are detailed below.
+Testing is done in two phases: 1) Offline computation of test strategies 2) Online testing, which are detailed below.
 
 # Installation
 ## Manual installation
@@ -112,7 +112,7 @@ while `maze_fault.py` is an incorrect one. Both implementations violate `maze_re
 To run tests with the test objective defined by `maze_req.v`, run:
 
     python3 tester.py -e greedy --epsilon 25 -i examples/maze/maze.py -s examples/maze/teststrategy_maze_req_objective.aag
-
+****
 This applies the epsilon-greedy strategy with epsilon=0.25.
 This will print the generated trace and end with "Objective reached: maze_req_objective".
 In fact, the requirement contains the output 'objective', which was renamed as 'maze_req_objective'.

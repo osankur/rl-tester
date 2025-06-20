@@ -17,6 +17,6 @@ chmod +x configure.sh
 make
 echo "export PATH=\$PATH:`pwd`" >> ~/.bashrc
 
-cd ../scripts
+cd ../../scripts
 make
 source ~/.bashrc

@@ -40,7 +40,7 @@ public class TxsAdapter implements Runnable {
             final int maxSleepTime = 180;
             byte[] buffer = new byte[4000];
 
-            ProcessBuilder builder = new ProcessBuilder("python3", "passageway.py", "-s");
+            ProcessBuilder builder = new ProcessBuilder("python3", "../passageway.py", "-s");
             builder.redirectErrorStream(true); // so we can ignore the error stream
             Process process = builder.start();
             InputStream out = process.getInputStream();
@@ -77,8 +77,8 @@ public class TxsAdapter implements Runnable {
                 // Forward output to Torxakis
                 sockOut.print(parts[0]+"\n");
                 sockOut.flush();
-                System.out.println(parts[0]+"\n");
-                System.out.println(parts[1]+"\n");
+                System.out.println("Fowarded to TorX: <" + parts[0]+">\n");
+                System.out.println("Ignored: " + parts[1]+"\n");
 
                 // // Read state, and just print it
                 // no = 0;
