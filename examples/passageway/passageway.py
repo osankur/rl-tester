@@ -25,7 +25,7 @@ import re
 
 class Corridor:
 
-    def __init__(self):
+    def __init__(self, nb_rooms = 10):
         # self.k = 8
         self.k = 4
         self.x = 0
@@ -40,7 +40,7 @@ class Corridor:
         self.doorstep = False
         self.open = False
         # number of consecutive steps where input was up
-        self.nb_rooms = 10
+        self.nb_rooms = nb_rooms
         self.zone = [False] * self.nb_rooms
         self.fault = False
 
@@ -92,8 +92,8 @@ class Corridor:
         dx = (1 if self.iright else -1)
         dy = (1 if self.iup else -1)
 
-        # introduce bug: refuse to move right at open /\ doorstep in the room 8
-        if self.zone[8] and (self.x % self.k) == self.k-1 and self.y == 0:
+        # introduce bug: refuse to move right at open /\ doorstep when moving to the last room
+        if self.zone[self.nb_rooms-2] and (self.x % self.k) == self.k-1 and self.y == 0:
             if dx > 0:
                 dx = 0
         # collisions are forbidden except when y == 0
@@ -165,8 +165,9 @@ class Corridor:
             step += 1
             sys.stdout.flush()
 
-maze = Corridor()
-if len(sys.argv) >= 2 and sys.argv[1] == "-s":
-    maze.run_socket()
-else:
-    maze.run()
+if __name__ == "__main__":
+    maze = Corridor()
+    if len(sys.argv) >= 2 and sys.argv[1] == "-s":
+        maze.run_socket()
+    else:
+        maze.run()

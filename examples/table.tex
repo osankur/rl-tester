@@ -1,0 +1,23 @@
+\begin{table*}[t]
+  \centering
+  \begin{tabular}{|l|c|c|c|c|c|c|}
+    \hline
+    \bfseries       & TorXakis &  $\uniformtc_K$ & $\epsgreedytc_K$       & MCTS              & MCTS + GRO        & MCTS + GTRO        \\\hline
+    Passageway 3    & -        &  9296 XX        & 799 (4.3s)             & 3,428 (4.3s)      & \bf 512 (1s)      &                    \\\hline
+    Passageway 5    & -        &  XXX            & XX                     & 66,617 (327s)     & \bf 14,350 (10s)  &                    \\\hline
+    Passageway 10   & -        &  -              & -                      & XXXX              & XXXX              &                    \\\hline
+    Ring 4          &          & 50 (0.1s)       & \bf 4 (0.1s)           & \bf 4 (0.2s)      & 5 (0.2s)          & \bf 4 (0.2s)          \\\hline
+    Ring 8          &     -    & 3,587 (0.6s)    & \bf 14 (0.2s)          & 2,774 (1s)        & 15 (0.2s)         & \bf 14 (0.2s)          \\\hline
+    Ring 16         &   -      & -               & \bf 50 (0.2s)          & 23,052 (5.6s)     & 69 (0.2s)         & 56 (0.2s)          \\\hline
+    Ring 32         &     -    & -               & \bf 679 (0.3)          & 23,758 (13.3s)    & 748 (0.3s)        &  743 (0.3s)         \\\hline 
+    Ring Lagging 4  &          & 501 (0.2s)      & 9 (0.15s)              & 674 (0.18s)       & 4.8 (0.2s)        & \bf 4 (0.2s)          \\\hline
+    Ring Lagging 8  &     -    & 661223 XXX      & \bfseries 44 (0.2s)    & 11,736 (7s)       & 132 (0.2s)        & 102 (0.2s)         \\\hline
+    Ring Lagging 16 &   -      & XXX             & 691 (0.3s)             & 74,488 (12s)      & 700 (0.3s)        & \bf 637 (0.3s)         \\\hline
+    Ring Lagging 32 &     -    & -               & 216,016 (42s)         & XXX               & 203,588 (36s)      & \bf 52,293 (3.9s)        \\\hline 
+  \end{tabular}
+  \caption{Total number of steps (average computed over 100 experiments) performed by by each algorithm before finding a trace satisfying the objective.
+    A dash means that no trace was found.
+    GRO stands for greedy roll-out, and GTRO for greedy tree policy and roll out.
+  }
+  \label{table:results}
+\end{table*}
