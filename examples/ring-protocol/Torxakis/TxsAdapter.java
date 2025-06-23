@@ -40,7 +40,7 @@ public class TxsAdapter implements Runnable {
             final int maxSleepTime = 180;
             byte[] buffer = new byte[4000];
 
-            ProcessBuilder builder = new ProcessBuilder("python3", "../ring.py", "-s");
+            ProcessBuilder builder = new ProcessBuilder("python3", "../ring32.py", "-s");
             builder.redirectErrorStream(true); // so we can ignore the error stream
             Process process = builder.start();
             InputStream out = process.getInputStream();
