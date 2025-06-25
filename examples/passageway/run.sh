@@ -3,9 +3,9 @@ TIMELIM=1800
 ulimit -t ${TIMELIM}
 N=100
 MAXSTEPS=250
-EPS=25
-rollout_policy=uniform # greedy | uniform
-greedy_steps_in_tree_policy=0 # 0 or 30
+EPS=12
+rollout_policy=greedy # greedy | uniform
+greedy_steps_in_tree_policy=150 # 0 or 30
 alg=$1 # uniform greedy mcts
 mkdir -p logs
 set -e
